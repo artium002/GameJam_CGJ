@@ -11,6 +11,9 @@ public class GameController : MonoBehaviour
     private bool GameEnded = false;
 
 
+    public float counter = 100;
+    private float PCounter;
+
     private int BaseScore = 0;
     public int score;
 
@@ -19,6 +22,8 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        PCounter = counter;
+
         score = BaseScore;
         UpdateScore();
     }
@@ -29,26 +34,45 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+
         if (Input.GetKeyDown (KeyCode.Space) && !GameEnded)
         {
+            //add score and update the text
             score += 100;
             UpdateScore();
+
+            // add time to countdown
+            PCounter += 50;
         }
+
+
         if (Input.GetKeyDown(KeyCode.H) && !GameEnded)
         {
+            //decrease score (maybe reduce countdown)
             score -= 50;
             UpdateScore();
         }
 
 
-        if (score < 0 && !GameEnded)
+        //Game End
+        if ((score < 0 || PCounter <= 0) && !GameEnded)
         {
-            Debug.Log("GameEnded");
-            GameEnded = true;
+            EndGame();
         }
         
     }
 
+    void FixedUpdate() 
+    {
+        if (!GameEnded)
+        {
+        PCounter -= 1 * Time.deltaTime;
+        Debug.Log(PCounter.ToString());
+        }
+    }
+
+    // update score text, makes sure there are no negative score.
     private void UpdateScore()
     {
         scoretext.text = score.ToString(); if (score <= 0)
@@ -57,5 +81,11 @@ public class GameController : MonoBehaviour
         {
             scoretext.text = "0"; 
         }
+    }
+
+    private void EndGame()
+    {
+            Debug.Log("GameEnded");
+            GameEnded = true;
     }
 }
