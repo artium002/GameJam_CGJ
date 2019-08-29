@@ -7,7 +7,7 @@ public class GameController : MonoBehaviour
 {
 
     public Text scoretext;
-
+    public Text TimeText;
     private bool GameEnded = false;
 
 
@@ -53,34 +53,29 @@ public class GameController : MonoBehaviour
             score -= 50;
             UpdateScore();
         }
-
-
-        //Game End
-        if ((score < 0 || PCounter <= 0) && !GameEnded)
-        {
-            EndGame();
-        }
-        
     }
 
     void FixedUpdate() 
     {
+        if (PCounter<= 0) 
+            {
+                EndGame();
+            }
         if (!GameEnded)
         {
-        PCounter -= 1 * Time.deltaTime;
-        Debug.Log(PCounter.ToString());
+        PCounter -= Time.deltaTime;
+        TimeText.text = (Mathf.Round(PCounter)).ToString();
         }
     }
 
     // update score text, makes sure there are no negative score.
     private void UpdateScore()
     {
-        scoretext.text = score.ToString(); if (score <= 0)
-        
-
-        {
-            scoretext.text = "0"; 
-        }
+        scoretext.text = Mathf.Round(score).ToString(); 
+        if (score <= 0)
+            {
+                scoretext.text = "0"; 
+            }
     }
 
     private void EndGame()
@@ -88,4 +83,12 @@ public class GameController : MonoBehaviour
             Debug.Log("GameEnded");
             GameEnded = true;
     }
+
+    public void AddScore(int AScore, int ATime)
+    {
+        score += AScore;
+        PCounter += ATime;
+        UpdateScore();
+    }
+
 }
